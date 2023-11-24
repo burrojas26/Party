@@ -10,6 +10,7 @@ public class Party {
 	ArrayList<String> currComps = new ArrayList<String>();
 	ArrayList<Integer> companies = new ArrayList<Integer>();
 	ArrayList<Company> allCompanies = new ArrayList<Company>();
+	ArrayList<Guest> allPpl = getAllPpl();
 	String currName;
 	int currComp;
 	int currId;
@@ -40,7 +41,8 @@ public class Party {
 		return finalGuests;
 	}
 	
-		public ArrayList<Company> getComps() {
+	public ArrayList<Company> getComps() {
+		Company currCompany;
 		try {
 		  File myObj = new File("companies.txt");
 		  Scanner myReader = new Scanner(myObj);
@@ -59,8 +61,27 @@ public class Party {
 			companies.add(i);
 		}
 		for (int i = 0; i < companies.size(); i++) {
-			allCompanies.add(new Company(i+1, companies));
+			currCompany = new Company(i+1, companies);
+			currCompany.createComp(allPpl);
+			allCompanies.add(currCompany);
 		}
 		return allCompanies;
 	}
+
+	public ArrayList<Table> configTables(int numTables) {
+		ArrayList<Table> tables = new ArrayList<Table>();
+		Table currTable;
+		int startIndex = 0;
+		for (int i = 0; i < numTables; i++) {
+			currTable = new Table();
+			startIndex = currTable.configTable(i+1, startIndex, getComps());
+			tables.add(currTable);
+		}
+		return tables;
+	}
+
+
+
+
+
 }
