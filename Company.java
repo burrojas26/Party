@@ -10,7 +10,7 @@ public class Company {
 	
 	public Company(int initCompNum, ArrayList<Integer> initCompanies) {
 		companyNum = initCompNum;
-		comapnies = initCompanies;
+		companies = initCompanies;
 	}
 	
 	public void createComp(ArrayList<Guest> allPeople) {
@@ -28,6 +28,22 @@ public class Company {
 			}
 		}
 		return new Guest("", companyNum, 0);
+	}
+	
+	public String toString() {
+		String theString = "";
+		for (Guest g : employees) {
+			theString += g.toString() + " ";
+		}
+		return theString;
+	}
+	
+	public int getCount() {
+		int count = 0;
+		for (Guest g : employees) {
+			count++;
+		}
+		return count;
 	}
 		
 	
