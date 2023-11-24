@@ -20,6 +20,18 @@ public class Guest {
 		return tableNum;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setTabNum(int num) {
+		tableNum = num;
+	}
+	
 	public String toString() {
 		return "ID number: " + id + ", Name: " + name + ", company: " + company + ", Table Number: " + tableNum;
 	}
