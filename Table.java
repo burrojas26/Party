@@ -1,65 +1,58 @@
 import java.util.ArrayList;
+
+/**
+ * @author Jasper Burroughs
+ * 
+ * This class represents a table, and contains a list of Guests
+ * It contains a search method, which searches for a company within the table
+ * It contains an addPerson method, which adds a Guest to the list based on the passed in Guest
+ * It contains multiple getter methods to get the various parts of the table such as, the people at the table, the number of people at the table, and the table number
+ */
+
 public class Table {
 
-	Guest[] table = new Guest[10];
-		
-	public int configTable(int tableNum, int startIndex, ArrayList<Company> companies) {
-		Guest currPerson;
-		for (int i = 0; i < table.length; i++) {
-			currPerson = companies.get(startIndex).getRandPerson();
-				table[i] = currPerson;
-				currPerson.setTabNum(tableNum);
-			if (startIndex+1 >= companies.size()) {
-				startIndex = 0;
-			}
-			else {
-				startIndex++;
-			}
-		}
-		return startIndex;
+	ArrayList<Guest> table = new ArrayList<Guest>();
+	int tableNum;	
+	
+	public Table(int num) {
+		tableNum = num;
 	}
 	
+	/*
+	 * Searches for a specific company within a table
+	 */
+	public boolean search(int company) {
+		for (Guest person : table) {
+			if (person.getCompany() == company) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
+	public void addPerson(Guest thePerson) {
+		table.add(thePerson);
+	}
+	
+	public ArrayList<Guest> getTable() {
+		return table;
+	}
+	
+	public int getSize() {
+		return table.size();
+	}
+	
+	public int getNum() {
+		return tableNum;
+	}
+	
+	/*
+	 * Returns one string with all the names of the people at the table
+	 */
 	public String toString() {
 		String theString = "";
-		for (int i = 0; i < table.length; i++) {
-			theString += table[i].toString() + " ";
-		}
-		return theString;
-	}
-	
-	public String namesToString() {
-		String theString = "";
-		for (int i = 0; i < table.length; i++) {
-			theString += table[i].getName() + ", ";
-		}
-		return theString;
-	}
-	
-	public String getCompanies() {
-		String theString = "";
-		int comp;
-		for (int i = 0; i < table.length; i++) {
-			comp = table[i].getCompany();
-			theString += (comp) + ", ";
-		}
-		return theString;
-	}
-	
-	public int getCount() {
-		int count = 0;
-		for (int i = 0; i < table.length; i++) {
-			count++;
-		}
-		return count;
-	}
-	
-	public String getId() {
-		String theString = "";
-		int id;
-		for (int i = 0; i < table.length; i++) {
-			id = table[i].getId();
-			theString += (id) + ", ";
+		for (Guest g : table) {
+			theString += ", " + g.getName();
 		}
 		return theString;
 	}
