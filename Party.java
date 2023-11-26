@@ -72,9 +72,6 @@ public class Party {
 				}
 			}
 		}
-		for (Guest g : finalGuests) {
-			System.out.println(g.getName());
-		}
 		return finalGuests;
 	}
 	
