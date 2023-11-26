@@ -48,7 +48,7 @@ public class Tester {
 		 * Asking the user what they would like to do
 		 */
 		while (!descision.equals("quit")) {
-			System.out.print("Type tables to see the organized tables, companies to see all the people sorted by companies that wanted to attend, add to add a person, search to find a specif person's table, or quit to quit: ");
+			System.out.print("Type tables to see the organized tables, companies to see all the people sorted by companies that wanted to attend, add to add a person, search to find a specific person's table, or quit to quit: ");
 			descision = scan.nextLine();
 			//prints the tables
 			if (descision.equals("tables")) {
