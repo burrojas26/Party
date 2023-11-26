@@ -3,20 +3,36 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+/**
+ * @author Jasper Burroughs
+ * 
+ * This file contains methods to set up the party
+ * 
+ * It contains a getAllPpl method, which gets all the people from the document and asks the user if they would like to input any people
+ * It contains a getComps method, which gets the number of companies from the other documant and returns a list of that number of company classes each with the number that represents them
+ * It contains a configAllTables method, which configures the tables by running all of the people in the list that is passed in until it finds a table that they can fit at, if they do not fit at a table they do not get a seat
+ * It contains a search method that finds the details of a guest and prints them based on a passed in guest name
+ */
+
 public class Party {
 	
 	ArrayList<String> guests = new ArrayList<String>();
 	ArrayList<Guest> finalGuests = new ArrayList<Guest>();
-	ArrayList<String> currComps = new ArrayList<String>();
-	ArrayList<Integer> companies = new ArrayList<Integer>();
+	String rawCompanies = "";
+	int numCompanies = 0;
 	ArrayList<Company> allCompanies = new ArrayList<Company>();
-	ArrayList<Guest> allPpl = getAllPpl();
 	String currName;
 	int currComp;
 	int currId;
 	String[] currGuest;
+	Scanner scan = new Scanner(System.in);
 	
+	/*
+	 * Gets all of the people from the document 
+	 * creates Guests out of the information from the document and returns a list of these Guests
+	 */
 	public ArrayList<Guest> getAllPpl() {
+		//code learned from w3 schools to get information from a file
 		try {
 		  File myObj = new File("partyguests.txt");
 		  Scanner myReader = new Scanner(myObj);
@@ -38,17 +54,42 @@ public class Party {
 			currId = Integer.parseInt(currGuest[0]);
 			finalGuests.add(new Guest(currName, currComp, currId));
 		}
+		String proceed = "false";
+		while (!proceed.equals("continue")) {
+			System.out.println("Enter a guest's details to add them to the seating chart or type continue (format: name: company): ");
+			proceed = scan.nextLine();
+			if (!proceed.equals("continue")) {
+				// Learned try-catch from w3 schools instructions on reading files
+				try {
+					currGuest = proceed.split(": ");
+					currName = currGuest[0];
+					currComp = Integer.parseInt(currGuest[1]);
+					currId = finalGuests.size()+1;
+					finalGuests.add(new Guest(currName, currComp, currId));
+				}
+				catch (ArrayIndexOutOfBoundsException e) {
+					System.out.println("An error occurred. Please try again");
+				}
+			}
+		}
+		for (Guest g : finalGuests) {
+			System.out.println(g.getName());
+		}
 		return finalGuests;
 	}
 	
-	public ArrayList<Company> getComps() {
+	/*
+	 * creates an ArrayList of companies with the specific id from the document of companies
+	 */
+	public ArrayList<Company> getComps(ArrayList<Guest> allPpl) {
 		Company currCompany;
+		//Learned how to get information from files from w3 schools
 		try {
 		  File myObj = new File("companies.txt");
 		  Scanner myReader = new Scanner(myObj);
 		  while (myReader.hasNextLine()) {
 			String data = myReader.nextLine();
-			currComps.add(data);
+			rawCompanies += data;
 		  }
 		  myReader.close();
 		} 
@@ -56,32 +97,46 @@ public class Party {
 		  System.out.println("An error occurred.");
 		  e.printStackTrace();
 		}
-		
-		for (int i = 1; i <= (currComps.size()/2) + 1; i++) {
-			companies.add(i);
-		}
-		for (int i = 0; i < companies.size(); i++) {
-			currCompany = new Company(i+1, companies);
+		numCompanies = rawCompanies.split(",").length-1;
+		for (int i = 0; i < numCompanies; i++) {
+			currCompany = new Company(i+1);
 			currCompany.createComp(allPpl);
 			allCompanies.add(currCompany);
 		}
 		return allCompanies;
 	}
 
-	public ArrayList<Table> configTables(int numTables) {
-		ArrayList<Table> tables = new ArrayList<Table>();
-		Table currTable;
-		int startIndex = 0;
+
+	/* 
+	 * configures the tables by going through the list of people passed in until it finds a table they can sit at
+	 * if they cannot sit at any table the algorithm moves on to the next person
+	 */
+	public ArrayList<Table> configAllTables(ArrayList<Guest> allPpl, int numTables) {
+		ArrayList<Table> allTables = new ArrayList<Table>();
 		for (int i = 0; i < numTables; i++) {
-			currTable = new Table();
-			startIndex = currTable.configTable(i+1, startIndex, getComps());
-			tables.add(currTable);
+			allTables.add(new Table(i+1));
 		}
-		return tables;
+		for (Guest person : allPpl) {
+			for (Table table : allTables) {
+				if (table.search(person.getCompany()) == false && table.getSize() < 10 && person.getTable() == -1) {
+					table.addPerson(person);
+					person.setTabNum(table.getNum());
+				}
+			}
+		}
+		return allTables;
 	}
 
-
-
+	/*
+	 * finds a specific person and prints their information
+	 */
+	public void search(String name, ArrayList<Guest> allPpl) {
+		for (Guest g : allPpl) {
+			if (g.getName().equals(name)) {
+				System.out.println(g.toString());
+			}
+		}
+	}
 
 
 }
