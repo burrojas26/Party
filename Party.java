@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 /**
  * @author Jasper Burroughs
+ * @since 11/16/23
  * 
  * This file contains methods to set up the party
  * 
@@ -103,17 +104,45 @@ public class Party {
 		return allCompanies;
 	}
 
-
 	/* 
+	 * Creating the sorted lists to use for configuring the table
+	 * Must sort the list so that the companies with more people get sorted into the tables first - optimizes the number of people that can fit
 	 * configures the tables by going through the list of people passed in until it finds a table they can sit at
 	 * if they cannot sit at any table the algorithm moves on to the next person
 	 */
-	public ArrayList<Table> configAllTables(ArrayList<Guest> allPpl, int numTables) {
+	public ArrayList<Table> configAllTables(int numTables, ArrayList<Company> companies) {
+		ArrayList<Guest> sortedPpl = new ArrayList<Guest>();
+		ArrayList<Company> sortedCompanies = new ArrayList<Company>();
+		sortedCompanies.add(companies.get(0));
 		ArrayList<Table> allTables = new ArrayList<Table>();
+		//this variable is useed to add the Company to the sorted list at the end if it is not bigger than any of the other companies
+		boolean smallest = true;
+		
+		for (int i = 0; i < companies.size(); i++) {
+			smallest = true;
+			for (int j = 0; j < sortedCompanies.size(); j++) {
+				if (companies.get(i).getCount() > sortedCompanies.get(j).getCount()) {
+					sortedCompanies.add(j, companies.get(i));
+					smallest = false;
+					break;
+				}
+			}
+			if (smallest) {
+				sortedCompanies.add(companies.get(i));
+			}
+			
+		}
+		
+		for (Company comp : sortedCompanies) {
+			for (Guest p : comp.getPpl()) {
+				sortedPpl.add(p);
+			}
+		}
+		
 		for (int i = 0; i < numTables; i++) {
 			allTables.add(new Table(i+1));
 		}
-		for (Guest person : allPpl) {
+		for (Guest person : sortedPpl) {
 			for (Table table : allTables) {
 				if (table.search(person.getCompany()) == false && table.getSize() < 10 && person.getTable() == -1) {
 					table.addPerson(person);
@@ -127,13 +156,13 @@ public class Party {
 	/*
 	 * finds a specific person and prints their information
 	 */
-	public void search(String name, ArrayList<Guest> allPpl) {
+	public void search(String name, ArrayList<Guest> allPpl, ArrayList<Company> allCompanies) {
 		for (Guest g : allPpl) {
 			if (g.getName().equals(name)) {
-				System.out.println(g.toString());
+				System.out.println(g.toString(allCompanies));
 			}
 		}
 	}
 
-
+	
 }
