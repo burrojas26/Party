@@ -74,12 +74,7 @@ public class Guest {
 	 */
 	public String toString(ArrayList<Company> companies) {
 		String theString = "";
-		theString += "ID number: " + id + ", Name: " + name + ", company: ";
-		for (Company c : companies) {
-			if (c.getNum() == company) {
-				theString += c.getName();
-			}
-		}
+		theString += "ID number: " + id + ", Name: " + name + ", company: " + getCompanyName(companies);
 		if (tableNum != -1) {
 			theString += ", table: " + tableNum;
 		}
