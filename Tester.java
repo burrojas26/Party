@@ -14,11 +14,8 @@ public class Tester {
 	
 	public static void main(String[] args) {
 		Party theParty = new Party();
-		ArrayList<Guest> sortedPpl = new ArrayList<Guest>();
-		ArrayList<Company> sortedCompanies = new ArrayList<Company>();
 		ArrayList<Guest> allPpl = theParty.getAllPpl();
 		ArrayList<Company> companies = theParty.getComps(allPpl);
-		sortedCompanies.add(companies.get(0));
 		String descision = "";
 		Scanner scan= new Scanner(System.in);
 
@@ -47,7 +44,7 @@ public class Tester {
 			 * prints the people from the different companies
 			 */
 			else if (descision.equals("companies")) {
-				for (Company company : sortedCompanies) {
+				for (Company company : companies) {
 					System.out.println(company.toString());
 				}
 			}
