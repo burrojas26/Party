@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 /**
  * @author Jasper Burroughs
+ * @since 11/20/23
  * 
  * This class represents a table, and contains a list of Guests
  * It contains a search method, which searches for a company within the table
@@ -30,18 +31,29 @@ public class Table {
 		return false;
 	}
 	
+	/*
+	 * Adds a Guest class to the table's list of Guests
+	 */
 	public void addPerson(Guest thePerson) {
 		table.add(thePerson);
 	}
 	
+	/*
+	 * returns a list of Guests that makes up the Table
+	 */
 	public ArrayList<Guest> getTable() {
 		return table;
 	}
 	
+	/*
+	 * returns the number of people at the table
+	 */
 	public int getSize() {
 		return table.size();
 	}
-	
+	/*
+	 * returns the table number
+	 */
 	public int getNum() {
 		return tableNum;
 	}
