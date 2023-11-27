@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 /**
  * @author Jasper Burroughs
+ * @since 11/16/23
  * 
  * This is the file that contains the main method
  * 
@@ -20,44 +21,25 @@ public class Tester {
 		sortedCompanies.add(companies.get(0));
 		String descision = "";
 		Scanner scan= new Scanner(System.in);
-		
-		/*
-		 * Creating the sorted lists to use for configuring the table
-		 * Must sort the list so that the companies with more people get sorted into the tables first - optimizes the number of people that can fit
-		 */
-		for (int i = 1; i < companies.size(); i++) {
-			for (int j = 0; j < sortedCompanies.size(); j++) {
-				if (companies.get(i).getCount() > sortedCompanies.get(j).getCount()) {
-					sortedCompanies.add(j, companies.get(i));
-					break;
-				}
-			}
-			
-		}
-		
-		for (Company comp : sortedCompanies) {
-			for (Guest p : comp.getPpl()) {
-				sortedPpl.add(p);
-			}
-		}
-		
+
 		//configuring the table with the sorted list of people
-		ArrayList<Table> allTables = theParty.configAllTables(sortedPpl, 10);
+		ArrayList<Table> allTables = theParty.configAllTables(10, companies);
 		
 		/*
-		 * Asking the user what they would like to do
+		 * Asking the user what they would like to do and directing them to that method
 		 */
 		while (!descision.equals("quit")) {
 			System.out.print("Type tables to see the organized tables, companies to see all the people sorted by companies that wanted to attend, add to add a person, search to find a specific person's table, or quit to quit: ");
 			descision = scan.nextLine();
+			System.out.println("");
 			//prints the tables
 			if (descision.equals("tables")) {
 				for (Table t : allTables) {
-					System.out.print("Table: ");
+					System.out.print("Table " + t.getNum() + ": ");
 					for (Guest g : t.getTable()) {
 						System.out.print(g.getName() + ", ");
 					}
-					System.out.println(t.getSize());
+					System.out.println("There are " + t.getSize() + " guests at this table");
 					System.out.println("");
 				}
 			}
@@ -65,7 +47,7 @@ public class Tester {
 			 * prints the people from the different companies
 			 */
 			else if (descision.equals("companies")) {
-				for (Company company : companies) {
+				for (Company company : sortedCompanies) {
 					System.out.println(company.toString());
 				}
 			}
@@ -74,7 +56,7 @@ public class Tester {
 			 */
 			else if (descision.equals("search")) {
 				System.out.print("Who do you want to search for (Enter their name): ");
-				theParty.search(scan.nextLine(), allPpl);
+				theParty.search(scan.nextLine(), allPpl, companies);
 			}
 			/*
 			 * gets the people again and re-configures the tables
@@ -82,28 +64,10 @@ public class Tester {
 			 */
 			else if (descision.equals("add")) {
 				theParty = new Party();
-				sortedPpl = new ArrayList<Guest>();
-				sortedCompanies = new ArrayList<Company>();
 				allPpl = theParty.getAllPpl();
 				companies = theParty.getComps(allPpl);
-				sortedCompanies.add(companies.get(0));
-				for (int i = 1; i < companies.size(); i++) {
-					for (int j = 0; j < sortedCompanies.size(); j++) {
-						if (companies.get(i).getCount() > sortedCompanies.get(j).getCount()) {
-							sortedCompanies.add(j, companies.get(i));
-							break;
-						}
-					}
-					
-				}
+				allTables = theParty.configAllTables(10, companies);
 				
-				for (Company comp : sortedCompanies) {
-					for (Guest p : comp.getPpl()) {
-						sortedPpl.add(p);
-					}
-				}
-				
-				allTables = theParty.configAllTables(sortedPpl, 10);
 			}
 			else if (!descision.equals("quit")) {
 				System.out.println("Please try again");
